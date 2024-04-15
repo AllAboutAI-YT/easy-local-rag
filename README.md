@@ -1,6 +1,7 @@
 # SuperEasy 100% Local RAG with Ollama
 
 ### YouTube Tutorial
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Oe-7dGDyzPM/0.jpg)](https://www.youtube.com/watch?v=Oe-7dGDyzPM)
 https://www.youtube.com/watch?v=Oe-7dGDyzPM
 
 ### Setup
