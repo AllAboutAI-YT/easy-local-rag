@@ -9,3 +9,4 @@
 5. run localrag.py
    
 ### My YouTube Channel
+https://www.youtube.com/c/AllAboutAI
