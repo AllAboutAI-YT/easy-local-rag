@@ -1,5 +1,5 @@
 # easy-local-rag
-###SuperEasy 100% Local RAG with Ollama
+### SuperEasy 100% Local RAG with Ollama
 
 ### Setup
 1. git clone https://github.com/AllAboutAI-YT/easy-local-rag.git
