@@ -8,7 +8,7 @@
 2. cd dir
 3. pip install -r requirements.txt
 4. Install Ollama (https://ollama.com/download)
-5. run pdf.py (if you have a pdf file)
+5. run upload.py (pdf, json or txt file)
 6. run localrag.py
    
 ### My YouTube Channel
