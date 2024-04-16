@@ -1,78 +1,53 @@
 import os
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog
 import PyPDF2
 import re
-import json
 
+# Function to convert PDF to text and append to vault.txt
 def convert_pdf_to_text():
     file_path = filedialog.askopenfilename(filetypes=[("PDF Files", "*.pdf")])
     if file_path:
-        try:
-            with open(file_path, 'rb') as pdf_file:
-                pdf_reader = PyPDF2.PdfReader(pdf_file)
-                num_pages = len(pdf_reader.pages)
-                text = ''
-                for page_num in range(num_pages):
-                    page = pdf_reader.pages[page_num]
-                    if page.extract_text():
-                        text += page.extract_text() + " "
+        with open(file_path, 'rb') as pdf_file:
+            pdf_reader = PyPDF2.PdfReader(pdf_file)
+            num_pages = len(pdf_reader.pages)
+            text = ''
+            for page_num in range(num_pages):
+                page = pdf_reader.pages[page_num]
+                if page.extract_text():
+                    text += page.extract_text() + " "
+            
+            # Normalize whitespace and clean up text
+            text = re.sub(r'\s+', ' ', text).strip()
+            
+            # Split text into chunks by sentences, respecting a maximum chunk size
+            sentences = re.split(r'(?<=[.!?]) +', text)  # split on spaces following sentence-ending punctuation
+            chunks = []
+            current_chunk = ""
+            for sentence in sentences:
+                # Check if the current sentence plus the current chunk exceeds the limit
+                if len(current_chunk) + len(sentence) + 1 < 1000:  # +1 for the space
+                    current_chunk += (sentence + " ").strip()
+                else:
+                    # When the chunk exceeds 1000 characters, store it and start a new one
+                    chunks.append(current_chunk)
+                    current_chunk = sentence + " "
+            if current_chunk:  # Don't forget the last chunk!
+                chunks.append(current_chunk)
 
             with open("vault.txt", "a", encoding="utf-8") as vault_file:
-                vault_file.write(text.strip() + "\n\n")
-
-            print(f"PDF content appended to vault.txt.")
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
-    else:
-        messagebox.showwarning("Warning", "No PDF file selected.")
-
-def read_json_file():
-    file_path = filedialog.askopenfilename(filetypes=[("JSON Files", "*.json")])
-    if file_path:
-        try:
-            with open(file_path, 'r', encoding='utf-8') as json_file:
-                data = json.load(json_file)
-
-            with open("vault.txt", "a", encoding="utf-8") as vault_file:
-                vault_file.write(json.dumps(data, indent=4))
-                vault_file.write("\n\n")
-
-            print(f"JSON content appended to vault.txt.")
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
-    else:
-        messagebox.showwarning("Warning", "No JSON file selected.")
-
-def append_text_file():
-    file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
-    if file_path:
-        try:
-            with open(file_path, 'r', encoding='utf-8') as text_file:
-                content = text_file.read()
-
-            with open("vault.txt", "a", encoding="utf-8") as vault_file:
-                vault_file.write(content.strip() + "\n\n")
-
-            print(f"Text content appended to vault.txt.")
-        except Exception as e:
-            messagebox.showerror("Error", str(e))
-    else:
-        messagebox.showwarning("Warning", "No text file selected.")
+                for chunk in chunks:
+                    # Write each chunk to its own line
+                    vault_file.write(chunk.strip() + "\n\n")  # Two newlines to separate chunks
+            print(f"PDF content appended to vault.txt with each chunk on a separate line.")
 
 # Create the main window
 root = tk.Tk()
-root.title("File Uploader")
+root.title("Upload .pdf")
 
-# Create buttons for each file type
-pdf_button = tk.Button(root, text="Upload PDF", command=convert_pdf_to_text)
-pdf_button.pack(pady=10)
-
-json_button = tk.Button(root, text="Upload JSON", command=read_json_file)
-json_button.pack(pady=10)
-
-text_button = tk.Button(root, text="Upload Text", command=append_text_file)
-text_button.pack(pady=10)
+# Create a button to open the file dialog
+button = tk.Button(root, text="Upload PDF", command=convert_pdf_to_text)
+button.pack(pady=20)
 
 # Run the main event loop
 root.mainloop()
