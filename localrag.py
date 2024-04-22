@@ -2,6 +2,7 @@ import torch
 from sentence_transformers import SentenceTransformer, util
 import os
 from openai import OpenAI
+import argparse
 
 # ANSI escape codes for colors
 PINK = '\033[95m'
@@ -9,12 +10,6 @@ CYAN = '\033[96m'
 YELLOW = '\033[93m'
 NEON_GREEN = '\033[92m'
 RESET_COLOR = '\033[0m'
-
-# Configuration for the Ollama API client
-client = OpenAI(
-    base_url='http://localhost:11434/v1',
-    api_key='mistral'
-)
 
 # Function to open a file and return its contents as a string
 def open_file(filepath):
@@ -37,9 +32,8 @@ def get_relevant_context(user_input, vault_embeddings, vault_content, model, top
     relevant_context = [vault_content[idx].strip() for idx in top_indices]
     return relevant_context
 
-
 # Function to interact with the Ollama model
-def ollama_chat(user_input, system_message, vault_embeddings, vault_content, model):
+def ollama_chat(user_input, system_message, vault_embeddings, vault_content, model, ollama_model, conversation_history):
     # Get relevant context from the vault
     relevant_context = get_relevant_context(user_input, vault_embeddings, vault_content, model)
     if relevant_context:
@@ -53,29 +47,45 @@ def ollama_chat(user_input, system_message, vault_embeddings, vault_content, mod
     user_input_with_context = user_input
     if relevant_context:
         user_input_with_context = context_str + "\n\n" + user_input
-
-    # Create a message history including the system message and the user's input with context
+    
+    # Append the user's input to the conversation history
+    conversation_history.append({"role": "user", "content": user_input_with_context})
+    
+    # Create a message history including the system message and the conversation history
     messages = [
         {"role": "system", "content": system_message},
-        {"role": "user", "content": user_input_with_context}
+        *conversation_history
     ]
+    
     # Send the completion request to the Ollama model
     response = client.chat.completions.create(
-        model="mistral",
+        model=ollama_model,
         messages=messages
     )
+    
+    # Append the model's response to the conversation history
+    conversation_history.append({"role": "assistant", "content": response.choices[0].message.content})
+    
     # Return the content of the response from the model
     return response.choices[0].message.content
 
+# Parse command-line arguments
+parser = argparse.ArgumentParser(description="Ollama Chat")
+parser.add_argument("--model", default="llama3", help="Ollama model to use (default: llama3)")
+args = parser.parse_args()
 
-# How to use:
+# Configuration for the Ollama API client
+client = OpenAI(
+    base_url='http://localhost:11434/v1',
+    api_key='llama3'
+)
+
 # Load the model and vault content
 model = SentenceTransformer("all-MiniLM-L6-v2")
 vault_content = []
 if os.path.exists("vault.txt"):
     with open("vault.txt", "r", encoding='utf-8') as vault_file:
         vault_content = vault_file.readlines()
-
 vault_embeddings = model.encode(vault_content) if vault_content else []
 
 # Convert to tensor and print embeddings
@@ -83,8 +93,14 @@ vault_embeddings_tensor = torch.tensor(vault_embeddings)
 print("Embeddings for each line in the vault:")
 print(vault_embeddings_tensor)
 
-# Example usage
-user_input = input(YELLOW + "Ask a question about your documents: " + RESET_COLOR)
-system_message = "You are a helpful assistat that is an expert at extracting the most useful information from a given text"
-response = ollama_chat(user_input, system_message, vault_embeddings_tensor, vault_content, model)
-print(NEON_GREEN + "Mistral Response: \n\n" + response + RESET_COLOR)
+# Conversation loop
+conversation_history = []
+system_message = "You are a helpful assistant that is an expert at extracting the most useful information from a given text"
+
+while True:
+    user_input = input(YELLOW + "Ask a question about your documents (or type 'quit' to exit): " + RESET_COLOR)
+    if user_input.lower() == 'quit':
+        break
+    
+    response = ollama_chat(user_input, system_message, vault_embeddings_tensor, vault_content, model, args.model, conversation_history)
+    print(NEON_GREEN + "Response: \n\n" + response + RESET_COLOR)
