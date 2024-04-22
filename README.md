@@ -11,7 +11,7 @@
 5. run upload.py (pdf, .txt, JSON)
 6. run localrag.py
 
-### Latest Updates
+### Latest Updates V1.1
 - Pick your model from the CLI
   - python localrag.py --model mistral (llama3 is default)
 - Talk in a true loop with conversation history
