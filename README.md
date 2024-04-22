@@ -10,6 +10,10 @@
 4. Install Ollama (https://ollama.com/download)
 5. run upload.py (pdf, .txt, JSON)
 6. run localrag.py
+
+### Latest Updates
+- Pick your model from the CLI (python localrag.py --model mistral (llama3 is default)
+- Talk in a true loop with conversation history
    
 ### My YouTube Channel
 https://www.youtube.com/c/AllAboutAI
