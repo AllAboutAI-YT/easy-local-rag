@@ -3,18 +3,25 @@
 ### YouTube Tutorial
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Oe-7dGDyzPM/0.jpg)](https://www.youtube.com/watch?v=Oe-7dGDyzPM)
 
+### YouTube Updated Features
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Oe-7dGDyzPM/0.jpg)](https://www.youtube.com/watch?v=Oe-7dGDyzPM)
+
 ### Setup
 1. git clone https://github.com/AllAboutAI-YT/easy-local-rag.git
 2. cd dir
 3. pip install -r requirements.txt
 4. Install Ollama (https://ollama.com/download)
-5. run upload.py (pdf, .txt, JSON)
-6. run localrag.py
+5. ollama pull llama3 (etc)
+6. ollama pull mxbai-embed-large
+7. run upload.py (pdf, .txt, JSON)
+8. run localrag.py
 
-### Latest Updates V1.1
-- Pick your model from the CLI
-  - python localrag.py --model mistral (llama3 is default)
-- Talk in a true loop with conversation history
+### Latest Updates V1.2
+- New embeddings model mxbai-embed-large from ollama (1.2)
+- Rewrite query function to improve retrival on vauge questions (1.2)
+- Pick your model from the CLI (1.1)
+  - python localrag.py --model mistral (llama3 is default) 
+- Talk in a true loop with conversation history (1.1)
    
 ### My YouTube Channel
 https://www.youtube.com/c/AllAboutAI
