@@ -1,10 +1,10 @@
 # SuperEasy 100% Local RAG with Ollama
 
 ### YouTube Tutorial
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Oe-7dGDyzPM/0.jpg)](https://www.youtube.com/watch?v=Oe-7dGDyzPM)
+https://www.youtube.com/watch?v=Oe-7dGDyzPM
 
 ### YouTube Updated Features
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi//0.jpg)](https://www.youtube.com/watch?v=)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/3e_ZwfLYPeM/0.jpg)](https://www.youtube.com/watch?v=3e_ZwfLYPeM)
 
 ### Setup
 1. git clone https://github.com/AllAboutAI-YT/easy-local-rag.git
