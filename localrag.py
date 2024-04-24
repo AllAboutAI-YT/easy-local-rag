@@ -109,13 +109,13 @@ def ollama_chat(user_input, system_message, vault_embeddings, vault_content, oll
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Ollama Chat")
-parser.add_argument("--model", default="dolphin-llama3", help="Ollama model to use (default: llama3)")
+parser.add_argument("--model", default="llama3", help="Ollama model to use (default: llama3)")
 args = parser.parse_args()
 
 # Configuration for the Ollama API client
 client = OpenAI(
     base_url='http://localhost:11434/v1',
-    api_key='dolphin-llama3'
+    api_key='llama3'
 )
 
 # Load the vault content
