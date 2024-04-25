@@ -14,7 +14,8 @@ https://www.youtube.com/watch?v=Oe-7dGDyzPM
 5. ollama pull llama3 (etc)
 6. ollama pull mxbai-embed-large
 7. run upload.py (pdf, .txt, JSON)
-8. run localrag.py
+8. run localrag.py (with query re-write)
+9. run localrag_no_rewrite.py (no query re-write)
 
 ### Latest Updates V1.2
 - New embeddings model mxbai-embed-large from ollama (1.2)
