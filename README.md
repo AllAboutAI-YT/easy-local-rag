@@ -18,7 +18,7 @@ https://www.youtube.com/watch?v=Oe-7dGDyzPM
 9. run localrag_no_rewrite.py (no query re-write)
 
 ### Latest Updates V1.2
-- Upload.py
+- Upload.py (v1.2)
    - replaced /n/n with /n 
 - New embeddings model mxbai-embed-large from ollama (1.2)
 - Rewrite query function to improve retrival on vauge questions (1.2)
