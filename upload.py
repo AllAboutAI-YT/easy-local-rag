@@ -38,7 +38,7 @@ def convert_pdf_to_text():
             with open("vault.txt", "a", encoding="utf-8") as vault_file:
                 for chunk in chunks:
                     # Write each chunk to its own line
-                    vault_file.write(chunk.strip() + "\n\n")  # Two newlines to separate chunks
+                    vault_file.write(chunk.strip() + "\n")  # Two newlines to separate chunks
             print(f"PDF content appended to vault.txt with each chunk on a separate line.")
 
 # Function to upload a text file and append to vault.txt
@@ -68,7 +68,7 @@ def upload_txtfile():
             with open("vault.txt", "a", encoding="utf-8") as vault_file:
                 for chunk in chunks:
                     # Write each chunk to its own line
-                    vault_file.write(chunk.strip() + "\n\n")  # Two newlines to separate chunks
+                    vault_file.write(chunk.strip() + "\n")  # Two newlines to separate chunks
             print(f"Text file content appended to vault.txt with each chunk on a separate line.")
 
 # Function to upload a JSON file and append to vault.txt
@@ -101,7 +101,7 @@ def upload_jsonfile():
             with open("vault.txt", "a", encoding="utf-8") as vault_file:
                 for chunk in chunks:
                     # Write each chunk to its own line
-                    vault_file.write(chunk.strip() + "\n\n")  # Two newlines to separate chunks
+                    vault_file.write(chunk.strip() + "\n")  # Two newlines to separate chunks
             print(f"JSON file content appended to vault.txt with each chunk on a separate line.")
 
 # Create the main window
