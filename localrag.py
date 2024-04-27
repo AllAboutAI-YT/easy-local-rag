@@ -108,27 +108,27 @@ def ollama_chat(user_input, system_message, vault_embeddings, vault_content, oll
     return response.choices[0].message.content
 
 # Parse command-line arguments
-print("Parsing command-line arguments...")
+print(NEON_GREEN + "Parsing command-line arguments..." + RESET_COLOR)
 parser = argparse.ArgumentParser(description="Ollama Chat")
 parser.add_argument("--model", default="llama3", help="Ollama model to use (default: llama3)")
 args = parser.parse_args()
 
 # Configuration for the Ollama API client
-print("Initializing Ollama API client...")
+print(NEON_GREEN + "Initializing Ollama API client..." + RESET_COLOR)
 client = OpenAI(
     base_url='http://localhost:11434/v1',
     api_key='llama3'
 )
 
 # Load the vault content
-print("Loading vault content...")
+print(NEON_GREEN + "Loading vault content..." + RESET_COLOR)
 vault_content = []
 if os.path.exists("vault.txt"):
     with open("vault.txt", "r", encoding='utf-8') as vault_file:
         vault_content = vault_file.readlines()
 
 # Generate embeddings for the vault content using Ollama
-print("Generating embeddings for the vault content...")
+print(NEON_GREEN + "Generating embeddings for the vault content..." + RESET_COLOR)
 vault_embeddings = []
 for content in vault_content:
     response = ollama.embeddings(model='mxbai-embed-large', prompt=content)
