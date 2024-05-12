@@ -1,4 +1,4 @@
-# SuperEasy 100% Local RAG with Ollama
+# SuperEasy 100% Local RAG with Ollama + Email RAG
 
 ### YouTube Tutorials
 - https://www.youtube.com/watch?v=Oe-7dGDyzPM
