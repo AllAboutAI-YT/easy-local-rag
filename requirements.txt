@@ -2,3 +2,4 @@ openai
 torch
 PyPDF2
 ollama
+yaml
