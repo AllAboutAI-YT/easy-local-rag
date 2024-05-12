@@ -3,3 +3,6 @@ torch
 PyPDF2
 ollama
 yaml
+beautifulsoup4
+lxml
+python-dotenv
