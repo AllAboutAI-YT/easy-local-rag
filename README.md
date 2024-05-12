@@ -24,8 +24,9 @@
 5. ollama pull llama3 (etc)
 6. ollama pull mxbai-embed-large
 7. set YOUR email logins in .env
-8. python collect_emails.py to download your emails
-9. python emailrag2.py to talk to your emails
+   -for gmail create app password (video)
+9. python collect_emails.py to download your emails
+10. python emailrag2.py to talk to your emails
 
 ### Latest Updates
 - Added Email RAG Support (v1.3)
