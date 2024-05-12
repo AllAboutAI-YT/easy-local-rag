@@ -2,7 +2,7 @@ openai
 torch
 PyPDF2
 ollama
-yaml
+pyyaml
 beautifulsoup4
 lxml
 python-dotenv
