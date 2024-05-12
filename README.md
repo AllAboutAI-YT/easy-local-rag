@@ -1,10 +1,11 @@
 # SuperEasy 100% Local RAG with Ollama
 
-### YouTube Tutorial
+### YouTube Tutorials
 https://www.youtube.com/watch?v=Oe-7dGDyzPM
+https://www.youtube.com/watch?v=vFGng_3hDRk
 
-### YouTube Updated Features
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/vFGng_3hDRk/0.jpg)](https://www.youtube.com/watch?v=vFGng_3hDRk)
+### LatestYouTube Updated Features
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/0X7raD1kISQ/0.jpg)](https://www.youtube.com/watch?v=0X7raD1kISQ)
 
 ### Setup
 1. git clone https://github.com/AllAboutAI-YT/easy-local-rag.git
@@ -17,7 +18,19 @@ https://www.youtube.com/watch?v=Oe-7dGDyzPM
 8. run localrag.py (with query re-write)
 9. run localrag_no_rewrite.py (no query re-write)
 
-### Latest Updates V1.2
+### Email RAG Setup
+1. git clone https://github.com/AllAboutAI-YT/easy-local-rag.git
+2. cd dir
+3. pip install -r requirements.txt
+4. Install Ollama (https://ollama.com/download)
+5. ollama pull llama3 (etc)
+6. ollama pull mxbai-embed-large
+7. set YOUR email logins in .env
+8. python collect_emails to download emails
+9. python emailrag2.py to talk to your emails
+
+### Latest Updates
+- Added Email RAG Support (v1.3)
 - Upload.py (v1.2)
    - replaced /n/n with /n 
 - New embeddings model mxbai-embed-large from ollama (1.2)
