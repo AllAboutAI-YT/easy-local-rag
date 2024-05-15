@@ -9,6 +9,7 @@ import argparse
 from bs4 import BeautifulSoup
 import lxml
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -76,27 +77,34 @@ def save_plain_text_content(email_bytes, email_id):
     save_chunks_to_vault(chunks)
     return text_content
 
-def search_and_process_emails(imap_client, email_source, search_keyword, start_date, end_date):
+def search_and_process_emails(imap_client, email_source, search_keyword, start_date, end_date, batch_size=100):
     search_criteria = 'ALL'
     if start_date and end_date:
         search_criteria = f'(SINCE "{start_date}" BEFORE "{end_date}")'
     if search_keyword:
-        search_criteria += f' BODY "{search_keyword}"'  # Ensure the correct combination of conditions
+        search_criteria += f' BODY "{search_keyword}"'
 
     print(f"Using search criteria for {email_source}: {search_criteria}")
     typ, data = imap_client.search(None, search_criteria)
-    if typ == 'OK':
-        email_ids = data[0].split()
-        print(f"Found {len(email_ids)} emails matching criteria in {email_source}.")
 
-        for num in email_ids:
-            typ, email_data = imap_client.fetch(num, '(RFC822)')
+    if typ == 'OK':
+        email_ids = data[0].split()  # This contains bytes objects
+        email_ids = [email_id.decode('utf-8') for email_id in email_ids]  # Decode to strings
+
+        for i in tqdm(range(0, len(email_ids), batch_size), desc=f"Processing {len(email_ids)} emails from {email_source}", unit="batch"):
+            batch_ids = email_ids[i:i + batch_size]
+            fetch_str = ','.join(batch_ids)  # Now we have strings
+            typ, email_data = imap_client.fetch(fetch_str, '(RFC822)')
+
             if typ == 'OK':
-                email_id = num.decode('utf-8')
-                print(f"Downloading and processing email ID: {email_id} from {email_source}")
-                save_plain_text_content(email_data[0][1], email_id)
+                for response_part in email_data:
+                    if isinstance(response_part, tuple):
+                        email_id = response_part[0].decode().split()[0]
+                        email_bytes = response_part[1]
+                        # print(f"Downloading and processing email ID: {email_id} from {email_source}")
+                        save_plain_text_content(email_bytes, email_id)
             else:
-                print(f"Failed to fetch email ID: {num.decode('utf-8')} from {email_source}")
+                print(f"Failed to fetch emails in batch from {email_source}")
     else:
         print(f"Failed to find emails with given criteria in {email_source}. No emails found.")
 
@@ -129,22 +137,25 @@ def main():
     outlook_username = os.getenv('OUTLOOK_USERNAME')
     outlook_password = os.getenv('OUTLOOK_PASSWORD')
 
-    # Connect to Gmail's IMAP server
-    M = imaplib.IMAP4_SSL('imap.gmail.com')
-    M.login(gmail_username, gmail_password)
-    M.select('inbox')
+    if gmail_username and gmail_password:
+        # Connect to Gmail's IMAP server
+        M = imaplib.IMAP4_SSL('imap.gmail.com')
+        M.login(gmail_username, gmail_password)
+        M.select('inbox')
+        search_and_process_emails(M, "Gmail", args.keyword, start_date, end_date)
+        M.logout()
+    else:
+        print("Gmail credentials not found in environment variables so skipping.")
 
-    # Connect to Outlook IMAP server
-    H = imaplib.IMAP4_SSL('imap-mail.outlook.com')
-    H.login(outlook_username, outlook_password)
-    H.select('inbox')
-
-    # Search and process emails from Gmail and Outlook
-    search_and_process_emails(M, "Gmail", args.keyword, start_date, end_date)
-    search_and_process_emails(H, "Outlook", args.keyword, start_date, end_date)
-
-    M.logout()
-    H.logout()
+    if outlook_username and outlook_password:
+        # Connect to Outlook IMAP server
+        H = imaplib.IMAP4_SSL('imap-mail.outlook.com')
+        H.login(outlook_username, outlook_password)
+        H.select('inbox')
+        search_and_process_emails(H, "Outlook", args.keyword, start_date, end_date)
+        H.logout()
+    else:
+        print("Outlook credentials not found in environment variables so skipping.")
 
 if __name__ == "__main__":
     main()
