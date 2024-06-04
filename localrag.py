@@ -168,12 +168,13 @@ print(NEON_GREEN + "Parsing command-line arguments..." + RESET_COLOR)
 parser = argparse.ArgumentParser(description="Ollama Chat")
 parser.add_argument("--model", default="llama3", help="Ollama model to use (default: llama3)")
 args = parser.parse_args()
+logger.info(f"Ollama Model for Chat : {args.model}")
 
 # Configuration for the Ollama API client
 print(NEON_GREEN + "Initializing Ollama API client..." + RESET_COLOR)
 client = OpenAI(
-    base_url='http://localhost:11434/v1',
-    api_key='llama3'
+    base_url = f'http://{OLLAMA_HOST}:11434/v1',
+    api_key  = 'llama3'
 )
 
 # Load the vault content
