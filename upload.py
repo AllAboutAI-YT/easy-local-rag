@@ -16,6 +16,7 @@ import json
 import time
 logger.debug("Import Modules : Done.")
 
+logger.debug("Setting Functions")
 # Function to convert PDF to text and append to vault.txt
 def convert_pdf_to_text():
     file_path = filedialog.askopenfilename(filetypes=[("PDF Files", "*.pdf")])
@@ -57,7 +58,6 @@ def convert_pdf_to_text():
         toc = time.perf_counter()
         logger.info(f"Duration : {toc - tic:0.4f} seconds")
 
-logger.debug("Setting Functions")
 # Function to upload a text file and append to vault.txt
 def upload_txtfile():
     file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
