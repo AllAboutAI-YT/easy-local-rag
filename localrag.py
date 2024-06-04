@@ -203,7 +203,7 @@ for content in vault_content:
 logger.debug("Generate Embeddings : Done.")
 toc = time.perf_counter()
 
-if f"{toc - tic:0.4f}" > 1000:
+if (toc - tic) >= 1000:
     duration = toc - tic / 60
     print(f"Duration : {duration:0.4f} minutes")
 else:
