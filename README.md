@@ -1,23 +1,23 @@
 # SuperEasy 100% Local RAG with Ollama + Email RAG
 
 ### Setup
-1. git clone
-2. cd dir
-3. pip install -r requirements.txt
-4. Install Ollama (https://ollama.com/download)
-5. ollama pull llama3 (etc)
-6. ollama pull mxbai-embed-large
-7. run upload.py (pdf, .txt, JSON)
+1. Install Ollama (https://ollama.com/download) // this can be done on another computer
+2. ollama pull llama3 (or any model you want to chat with)
+3. ollama pull mxbai-embed-large (model needed for embedding)
+4. git clone
+5. cd dir
+6. pip install -r requirements.txt
+7. run upload.py (.pdf, .txt, or JSON)
 8. run localrag.py (with query re-write)
 9. run localrag_no_rewrite.py (no query re-write)
 
 ### Email RAG Setup
-1. git clone
-2. cd dir
-3. pip install -r requirements.txt
-4. Install Ollama (https://ollama.com/download)
-5. ollama pull llama3 (etc)
-6. ollama pull mxbai-embed-large
+1. Install Ollama (https://ollama.com/download) // this can be done on another computer
+2. ollama pull llama3 (or any model you want to chat with)
+3. ollama pull mxbai-embed-large (model needed for embedding)
+4. git clone
+5. cd dir
+6. pip install -r requirements.txt
 7. set YOUR email logins in .env (for gmail create app password (video))
 9. python collect_emails.py to download your emails
 10. python emailrag2.py to talk to your emails
