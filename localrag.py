@@ -55,7 +55,6 @@ print(table)
 while EMBED_MODEL is None:
     try:
         choix = int(input("Veuillez choisir un modèle pour l'embedding en entrant l'ID correspondant : "))
-        # Vérifier si le choix est valide et paramétrer le workspace
         choix = choix - 1
         EMBED_MODEL = embed_models_list[choix]
         print(f"Vous avez choisi le model pour embed : {EMBED_MODEL}")
