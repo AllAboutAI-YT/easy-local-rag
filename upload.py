@@ -45,6 +45,8 @@ def convert_pdf_to_text():
 def upload_txtfile():
     file_path = filedialog.askopenfilename(filetypes=[("Text Files", "*.txt")])
     if file_path:
+        print(f'Received File : {file_path}')
+        print('Please wait...')
         with open(file_path, 'r', encoding="utf-8") as txt_file:
             text = txt_file.read()
             
