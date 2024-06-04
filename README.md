@@ -1,15 +1,15 @@
 # SuperEasy 100% Local RAG with Ollama + Email RAG
 
 ### Setup
-1. Install Ollama (https://ollama.com/download) // this can be done on another computer
-2. ollama pull llama3 (or any model you want to chat with)
-3. ollama pull mxbai-embed-large (model needed for embedding)
-4. git clone
-5. cd dir
-6. pip install -r requirements.txt
-7. run upload.py (.pdf, .txt, or JSON) to upload some documents to local RAG
-8. run localrag.py (with query re-write)
-9. run localrag_no_rewrite.py (no query re-write)
+1. Install Ollama : https://ollama.com/download // This can be done on another computer
+2. ```ollama pull llama3``` (or any model you want to chat with)
+3. ```ollama pull mxbai-embed-large``` (model needed for embedding)
+4. ```git clone```
+5. ```cd dir```
+6. ```pip install -r requirements.txt```
+7. run ```upload.py``` (.pdf, .txt, or JSON) to upload some documents to local RAG
+8. run ```localrag.py``` (with query re-write)
+9. run ```localrag_no_rewrite.py``` (no query re-write)
 
 ### His YouTube Channel
 forked from https://www.youtube.com/c/AllAboutAI
