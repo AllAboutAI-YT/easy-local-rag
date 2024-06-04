@@ -6,8 +6,11 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger.info("START")
+
+my_filename = "vault.txt"
+logger.info(f"Vault File Name : {my_filename}")
+
 logger.debug("Import Modules")
-import os
 import tkinter as tk
 from tkinter import filedialog
 import PyPDF2
