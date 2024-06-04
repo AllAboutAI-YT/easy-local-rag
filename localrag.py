@@ -5,11 +5,14 @@ from openai import OpenAI
 import argparse
 import json
 
+OLLAMA_HOST = '192.168.0.1'
+oclient     = ollama.Client(host=OLLAMA_HOST)
+
 # ANSI escape codes for colors
-PINK = '\033[95m'
-CYAN = '\033[96m'
-YELLOW = '\033[93m'
-NEON_GREEN = '\033[92m'
+PINK        = '\033[95m'
+CYAN        = '\033[96m'
+YELLOW      = '\033[93m'
+NEON_GREEN  = '\033[92m'
 RESET_COLOR = '\033[0m'
 
 # Function to open a file and return its contents as a string
@@ -22,7 +25,7 @@ def get_relevant_context(rewritten_input, vault_embeddings, vault_content, top_k
     if vault_embeddings.nelement() == 0:  # Check if the tensor has any elements
         return []
     # Encode the rewritten input
-    input_embedding = ollama.embeddings(model='mxbai-embed-large', prompt=rewritten_input)["embedding"]
+    input_embedding = oclient.embeddings(model='mxbai-embed-large', prompt=rewritten_input)["embedding"]
     # Compute cosine similarity between the input and vault embeddings
     cos_scores = torch.cosine_similarity(torch.tensor(input_embedding).unsqueeze(0), vault_embeddings)
     # Adjust top_k if it's greater than the number of available scores
@@ -131,7 +134,7 @@ if os.path.exists("vault.txt"):
 print(NEON_GREEN + "Generating embeddings for the vault content..." + RESET_COLOR)
 vault_embeddings = []
 for content in vault_content:
-    response = ollama.embeddings(model='mxbai-embed-large', prompt=content)
+    response = oclient.embeddings(model='mxbai-embed-large', prompt=content)
     vault_embeddings.append(response["embedding"])
 
 # Convert to tensor and print embeddings
