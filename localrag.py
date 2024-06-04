@@ -1,19 +1,72 @@
+import logging
+# Configurer le logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger.info("START")
+logger.debug("Import Modules")
+import time
 import torch
 import ollama
+from prettytable import PrettyTable
 import os
 from openai import OpenAI
 import argparse
 import json
+logger.debug("Import Modules : Done.")
 
-OLLAMA_HOST = '192.168.0.1'
-oclient     = ollama.Client(host=OLLAMA_HOST)
+logger.debug("Setting Vars")
+my_filename       = "vault.txt"                    ### FILENAME
+OLLAMA_HOST       = '192.168.0.1'                  ### OLLAMA HOST
+text_to_remove    = " - Dernière modification le 19 mai 2024 - Document généré le 03 juin 2024"
+oclient           = ollama.Client(host=OLLAMA_HOST)
+EMBED_MODEL       = None
+embed_models_list = []
+models_list       = oclient.list()
+# ANSI escape codes for console colors
+PINK              = '\033[95m'
+CYAN              = '\033[96m'
+YELLOW            = '\033[93m'
+NEON_GREEN        = '\033[92m'
+RESET_COLOR       = '\033[0m'
 
-# ANSI escape codes for colors
-PINK        = '\033[95m'
-CYAN        = '\033[96m'
-YELLOW      = '\033[93m'
-NEON_GREEN  = '\033[92m'
-RESET_COLOR = '\033[0m'
+logger.debug("Finding available models")
+for model in models_list['models']:
+    current_model_name = model['name']
+    if "embed" not in current_model_name:
+        continue
+    else:
+        embed_models_list.append(current_model_name)
+
+logger.debug("Creating PrettyTable")
+table = PrettyTable()
+table.field_names = ["ID", "Name"]
+# Ajouter les données au tableau
+i = 1
+for item in embed_models_list:
+    table.add_row([i, item])
+    i += 1
+
+logger.debug("Display PrettyTable")
+print(table)
+
+while EMBED_MODEL is None:
+    try:
+        choix = int(input("Veuillez choisir un modèle pour l'embedding en entrant l'ID correspondant : "))
+        # Vérifier si le choix est valide et paramétrer le workspace
+        choix = choix - 1
+        EMBED_MODEL = embed_models_list[choix]
+        print(f"Vous avez choisi le model pour embed : {EMBED_MODEL}")
+    except ValueError:
+        print("Entrée invalide. Veuillez entrer un nombre correspondant à l'ID.")
+
+logging.info(f"OLLAMA HOST : {OLLAMA_HOST}")
+logging.info(f"EMBED MODEL : {EMBED_MODEL}")
+input("Press Enter to continue... or CTRL+C to abort")
+
+logger.debug("Setting Vars : Done.")
 
 # Function to open a file and return its contents as a string
 def open_file(filepath):
@@ -57,11 +110,11 @@ def rewrite_query(user_input_json, conversation_history, ollama_model):
     Rewritten query: 
     """
     response = client.chat.completions.create(
-        model=ollama_model,
-        messages=[{"role": "system", "content": prompt}],
-        max_tokens=200,
-        n=1,
-        temperature=0.1,
+        model       = ollama_model,
+        messages    = [{"role": "system", "content": prompt}],
+        max_tokens  = 200,
+        n           = 1,
+        temperature = 0.1,
     )
     rewritten_query = response.choices[0].message.content.strip()
     return json.dumps({"Rewritten Query": rewritten_query})
@@ -133,18 +186,37 @@ if os.path.exists("vault.txt"):
 # Generate embeddings for the vault content using Ollama
 print(NEON_GREEN + "Generating embeddings for the vault content..." + RESET_COLOR)
 vault_embeddings = []
+
+tic = time.perf_counter()
 for content in vault_content:
-    response = oclient.embeddings(model='mxbai-embed-large', prompt=content)
+    print(YELLOW + 'QUERY' + RESET_COLOR)
+    print(content)
+    if text_to_remove:
+        content = content.replace(text_to_remove, ' ')
+    response = oclient.embeddings(model=EMBED_MODEL, prompt=content)
+    
+    print(NEON_GREEN + 'Done' + RESET_COLOR)
+    print(YELLOW + 'APPEND' + RESET_COLOR)
     vault_embeddings.append(response["embedding"])
+    print(NEON_GREEN + 'Done' + RESET_COLOR)
+
+logger.debug("Generate Embeddings : Done.")
+toc = time.perf_counter()
+
+if f"{toc - tic:0.4f}" > 1000:
+    duration = toc - tic / 60
+    print(f"Duration : {duration:0.4f} minutes")
+else:
+    print(f"Duration : {toc - tic:0.4f} seconds")
 
 # Convert to tensor and print embeddings
-print("Converting embeddings to tensor...")
+logger.info("Converting embeddings to tensor...")
 vault_embeddings_tensor = torch.tensor(vault_embeddings) 
-print("Embeddings for each line in the vault:")
+logger.info("Embeddings for each line in the vault:")
 print(vault_embeddings_tensor)
 
 # Conversation loop
-print("Starting conversation loop...")
+logger.info("Starting conversation loop...")
 conversation_history = []
 system_message = "You are a helpful assistant that is an expert at extracting the most useful information from a given text. Also bring in extra relevant infromation to the user query from outside the given context."
 
