@@ -221,9 +221,12 @@ conversation_history = []
 system_message = "You are a helpful assistant that is an expert at extracting the most useful information from a given text. Also bring in extra relevant infromation to the user query from outside the given context."
 
 while True:
+    logger.debug("User Loop")
     user_input = input(YELLOW + "Ask a query about your documents (or type 'quit' to exit): " + RESET_COLOR)
     if user_input.lower() == 'quit':
         break
     
     response = ollama_chat(user_input, system_message, vault_embeddings_tensor, vault_content, args.model, conversation_history)
     print(NEON_GREEN + "Response: \n\n" + response + RESET_COLOR)
+
+logger.info("End of File")
